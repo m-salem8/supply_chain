@@ -2,18 +2,21 @@ import requests
 from bs4 import BeautifulSoup
 import csv 
 from _01_extract_data import extract_main_data
+from _01_extract_data import extract_company_links
 from _02_convert_date import convert_to_date
 from itertools import zip_longest
 
-base_url = "https://www.trustpilot.com"
-reviews_per_company = [] 
-dates_posted = []        
-review_rates = []        
-replied = [] 
 
+base_url = "https://www.trustpilot.com"
 
 def extract_reviews(link):
+    reviews_per_company = [] 
+    dates_posted = []        
+    review_rates = []        
+    replied = []
+    
     page_number = 1
+    
     absolute_link = f"{base_url}{link}?page={page_number}"
     results = requests.get(absolute_link)
     src = results.content
@@ -21,6 +24,10 @@ def extract_reviews(link):
     total_pages = int(soup.find_all("span", {"class":"typography_heading-xxs__QKBS8 typography_appearance-inherit__D7XqR typography_disableResponsiveSizing__OuNP7"})[-2].text)
     
     while True:
+        absolute_link = f"{base_url}{link}?page={page_number}"
+        results = requests.get(absolute_link)
+        src = results.content
+        soup = BeautifulSoup(src, 'lxml')
         reviews = soup.find_all("p", {"class":"typography_body-l__KUYFJ typography_appearance-default__AAY17 typography_color-black__5LYEn"})
         dates = soup.find_all("div", {"class": "typography_body-m__xgxZ_ typography_appearance-subtle__8_H2l styles_datesWrapper__RCEKH"})
         review_rate = soup.find_all("div", {"class", "star-rating_starRating__4rrcf star-rating_medium__iN6Ty"})
@@ -46,7 +53,7 @@ def extract_reviews(link):
 
 if __name__ == "__main__":
     #link = "/review/electricityrates.com"
-    x, link = extract_main_data()
+    link = extract_company_links()
     reviews_data = extract_reviews(link[0])
     csv_file_path = "/mnt/c/Users/PC/Documents/supply_chain/electricityRatecom.csv"
     with open(csv_file_path, "w", newline='') as file:
