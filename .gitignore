@@ -1,0 +1,5 @@
+*.json
+# Environment-related files
+myenv/
+*.env
+.txt

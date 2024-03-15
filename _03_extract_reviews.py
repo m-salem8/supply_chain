@@ -40,7 +40,7 @@ def extract_reviews(link):
         print(f" Page switched to {page_number}")
     unpack_list = [review_rates, dates_posted, replied, reviews_per_company]
     reviews_data = zip_longest(*unpack_list)
-    print(f"Reviews Extraced Successfully !")
+    print(f"Reviews Extracted Successfully !")
     return reviews_data
 
 

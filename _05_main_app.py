@@ -1,4 +1,0 @@
-from _01_extract_data import extract_main_data
-from _03_extract_reviews import extract_reviews
-from _04_elasatic_push import create_index
-
