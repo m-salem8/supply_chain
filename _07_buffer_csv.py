@@ -7,7 +7,7 @@ def write_to_csv_buffer(data, col_names):
     wr.writerow(col_names)
     wr.writerows(data)
     csv_buffer.seek(0)  # Reset buffer position to beginning
-    return csv_buffer  # Corrected return statement
+    return csv_buffer  
 
 
 
