@@ -5,6 +5,7 @@ from _01_extract_data import extract_main_data
 from _01_extract_data import extract_company_links
 from _02_convert_date import convert_to_date
 from itertools import zip_longest
+import pandas as pd
 
 
 base_url = "https://www.trustpilot.com"
@@ -45,13 +46,23 @@ def extract_reviews(link):
         else:
             page_number += 1
         print(f" Page switched to {page_number}")
+    
     unpack_list = [review_rates, dates_posted, replied, reviews_per_company]
     reviews_data = zip_longest(*unpack_list)
     print(f"Reviews Extracted Successfully !")
-    return reviews_data
+    col_names = ["rate", "date_posted", "replied", "review_text"]
+    df = pd.DataFrame(reviews_data, columns = col_names)
+    return df
 
 
 if __name__ == "__main__":
+    link = "/review/usacea.org"
+    reviews_data = extract_reviews(link)
+    csv_file_path = "/mnt/c/Users/PC/Documents/supply_chain/usacae.csv"
+    reviews_data.to_csv(csv_file_path, index=False, mode='w+')
+
+
+"""if __name__ == "__main__":
     #link = "/review/electricityrates.com"
     link = extract_company_links()
     reviews_data = extract_reviews(link[0])
@@ -59,4 +70,4 @@ if __name__ == "__main__":
     with open(csv_file_path, "w", newline='') as file:
         wr = csv.writer(file)
         wr.writerow(["rate", "date_posted", "replied", "review_text"])
-        wr.writerows(reviews_data)
+        wr.writerows(reviews_data)"""

@@ -7,18 +7,16 @@ import time
 
 if __name__=="__main__":
 
-    company_data = extract_main_data()
-    company_cols = ["id","company_name", "trust score", "No of reviews", "domain"]
-    blob_name = "companies_data.csv"
-    file = write_to_csv_buffer(company_data, company_cols)
-    upload_blob(file, blob_name)
+    company_data = extract_main_data()          # Returns df comapnies main data as pandas df
+    file = write_to_csv_buffer(company_data)    # the df is created as a csv buffer object
+    blob_name = "companies_data.csv"            # name of the file of main companies data
+    upload_blob(file, blob_name)                # Upload to Azure blob storage
 
 
-    review_cols = ["rate", "date_posted", "replied", "review_text"]
     company_links = extract_company_links()
     for i, link in enumerate(company_links[:4]):
         reviews_data = extract_reviews(link)
-        file = write_to_csv_buffer(reviews_data, review_cols)
+        file = write_to_csv_buffer(reviews_data)
         blob_name = link.split('/')[2].split(".")[0] + '.csv'
         upload_blob(file, blob_name)
         if i < len(company_links[:4]) -1:

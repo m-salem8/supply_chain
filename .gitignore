@@ -3,3 +3,4 @@
 myenv/
 *.env
 .txt
+.vm_key

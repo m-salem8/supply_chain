@@ -7,6 +7,7 @@ from itertools import zip_longest
 import requests
 from bs4 import BeautifulSoup
 from itertools import zip_longest
+import pandas as pd
 
 def extract_company_links():
     """
@@ -79,7 +80,7 @@ def extract_main_data():
                 no_reviews.append(number_of_reviews[i].text.split("|")[1].split(" ")[0])
             else:
                 no_reviews.append(None)
-            domains.append(domain[i].text)
+            domains.append(domain[i].text.replace("·",","))
 
         if page_number > max_pages:
             print("Main Data Extracted Successfully !")
@@ -87,8 +88,60 @@ def extract_main_data():
         
         page_number += 1
 
+
     ids = range(1, len(names)+1)
-    unpack_list = [ids, company_name, trust_score, no_reviews, domains]
+    split_domains = [domain.split(",") for domain in domains]
+
+    df = pd.DataFrame({"id":ids[:13], "company name": company_name[:13], 
+                       "trust score": trust_score[:13], "no of reviews": no_reviews[:13],
+                        "domain":split_domains[:13]})
+    exploded_data = df.explode("domain", ignore_index=True)
+
+    return exploded_data
+
+
+if __name__ == "__main__":
+    companies_data = extract_main_data()
+    csv_file_path = "/mnt/c/Users/PC/Documents/supply_chain/companies_data.csv"
+    companies_data.to_csv(csv_file_path, index=False, mode='w+')
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+"""
+    unpack_list = [ids[:13], company_name[:13], trust_score[:13], no_reviews[:13], domains[:13]]
     company_data = zip_longest(*unpack_list)
 
     return company_data
@@ -107,3 +160,4 @@ if __name__=="__main__":
         wr = csv.writer(file)
         wr.writerow(["id","company_name", "trust score", "No of reviews", "domain"])
         wr.writerows(data)
+"""
