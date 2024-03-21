@@ -4,3 +4,6 @@ myenv/
 *.env
 .txt
 .vm_key
+myenv
+__pycache__
+*.vscode
